@@ -176,7 +176,7 @@ for(let x=-28;x<30;x+=4)B(x,x+2,0.02,0.03,8.45,8.55,mat.white,site,false);
 (function(){const geo=new THREE.BoxGeometry(3.2,0.08,1.4);const m=new THREE.Mesh(geo,mat.concrete);m.position.set(-0.85,0.32,0.65);m.rotation.x=0.22;m.receiveShadow=true;site.add(m);})();
 B(1.0,2.4,0.15,0.3,0,0.35,mat.stone,site);
 // back yard ground & fence
-B(-2.5,2.5,0,F0-0.05,-19,-20,mat.concrete,site);
+B(-2.5,2.5,0,F0-0.05,-18.55,-20,mat.concrete,site);B(-2.5,-2.3,0,2.4,-18.55,-20,mat.white,site);B(2.3,2.5,0,2.4,-18.55,-20,mat.white,site);
 B(-2.5,2.5,0,2.0,-19.9,-20,mat.white,site);
 // lot line markers
 B(-2.5,-2.45,0.16,0.2,0,-20,mat.red,site,false);B(2.45,2.5,0.16,0.2,0,-20,mat.red,site,false);
@@ -185,12 +185,12 @@ B(-8,-2.55,0,7.6,-0.5,-19,mat.nb,nbGroup);B(2.55,8,0,7.0,-1.5,-18,mat.nb,nbGroup
 
 /* ---------- GROUND FLOOR (g0) ---------- */
 const g0=groups[0];
-B(-2.5,2.5,0,F0,0,-19,mat.concrete,g0);
+B(-2.5,2.5,0,F0,0,-18.55,mat.concrete,g0);
 B(-2.3,2.3,F0-0.01,F0+0.012,0,-5,mat.concrete,g0,false);
-B(-2.3,2.3,F0-0.01,F0+0.012,-5,-19,mat.tile,g0,false);
+B(-2.3,2.3,F0-0.01,F0+0.012,-5,-18.55,mat.tile,g0,false);
 const t0=F1-ST;
-wallZ(0,-19,F0,t0,-2.5,-2.3,[],mat.white,g0);
-wallZ(0,-19,F0,t0,2.3,2.5,[],mat.white,g0);
+wallZ(0,-18.55,F0,t0,-2.5,-2.3,[],mat.white,g0);
+wallZ(0,-18.55,F0,t0,2.3,2.5,[],mat.white,g0);
 // front facade ground: stone cladding
 wallX(-2.5,2.5,F0,t0,0,-0.2,[{a0:-2.3,a1:0.7,y0:F0,y1:F0+2.7},{a0:1.0,a1:2.2,y0:F0,y1:F0+2.9}],mat.stone,g0);
 B(-2.3,0.7,F0,F0+2.7,-0.08,-0.12,mat.garage,g0);
@@ -198,10 +198,10 @@ B(1.0,1.9,F0,F0+2.9,-0.08,-0.12,mat.wood,g0);B(1.9,2.2,F0,F0+2.9,-0.09,-0.11,mat
 B(1.75,1.78,F0+1.0,F0+1.6,-0.02,-0.06,mat.metal,g0);
 B(0.85,2.4,F0+3.0,F0+3.06,0,0.6,mat.dark,g0); // entry canopy
 // back wall with window (PN1)
-wallX(-2.5,2.5,F0,t0,-18.8,-19,[{a0:-1.2,a1:1.2,y0:F0+0.9,y1:F0+2.6,glass:true},{a0:1.6,a1:2.3,y0:F0,y1:F0+2.3,glass:true}],mat.white,g0);
+wallX(-2.5,2.5,F0,t0,-18.35,-18.55,[{a0:-2.2,a1:1.0,y0:F0,y1:F0+2.6,glass:true},{a0:1.4,a1:2.2,y0:F0,y1:F0+2.4,glass:true}],mat.white,g0);
 // partitions
 wallX(-2.3,2.3,F0,t0,-4.95,-5.05,[{a0:-2.2,a1:0.45,y0:F0,y1:F0+2.9,glass:true},{a0:0.6,a1:1.6,y0:F0,y1:F0+2.6},{a0:1.75,a1:2.2,y0:F0,y1:F0+2.9,glass:true}],mat.white,g0);B(0.6,1.6,F0,F0+2.6,-4.97,-5.03,mat.glass,g0);
-wallX(-2.3,2.3,F0,t0,-15.45,-15.55,[{a0:1.2,a1:2.1,y0:F0,y1:F0+2.2}],mat.white,g0);
+wallX(-2.3,1.3,F0,t0,-14.95,-15.05,[{a0:0.2,a1:1.05,y0:F0,y1:F0+2.2}],mat.white,g0);wallZ(-15.05,-18.35,F0,t0,1.2,1.3,[],mat.white,g0); // hành lang ra sân sau
 // WC ground
 wallZ(-10.2,-12,F0,t0,-0.95,-0.85,[{a0:-10.4,a1:-11.2,y0:F0,y1:F0+2.2}],mat.white,g0);
 wallX(-2.3,-0.85,F0,t0,-10.15,-10.25,[],mat.white,g0);
@@ -219,14 +219,14 @@ stairU(F0,F1-F0,g0);
   B(2.25,2.3,y+0.4,y+2.9,-5.3,-8.6,mat.wood,g0);B(1.9,2.25,y,y+0.45,-5.6,-8.3,mat.dark,g0);B(2.2,2.25,y+1.0,y+1.9,-6.1,-7.7,mat.dark,g0);
   B(-1.0,0.6,y,y+0.01,-5.7,-8.3,mat.fabric2,g0,false);tree(1.9,-8.7,y,g0,0.7);})();
 // kitchen & dining
-(function(){const y=F0;B(-2.3,-1.7,y,y+0.9,-12.2,-15.3,mat.white,g0);B(-2.3,-1.7,y+0.9,y+0.94,-12.2,-15.3,mat.stone,g0);B(-2.3,-1.95,y+1.5,y+2.3,-12.2,-15.3,mat.wood,g0);
-  B(0.0,0.9,y+0.74,y+0.78,-12.9,-14.7,mat.wood,g0);B(0.42,0.48,y,y+0.74,-13.7,-13.9,mat.dark,g0);
-  [[-0.35,-13.2],[-0.35,-14.3],[1.25,-13.2],[1.25,-14.3]].forEach(p=>chair(p[0],p[1],y,g0));
-  B(1.7,2.3,y,y+2.0,-14.4,-15.4,mat.metal,g0);})();
+(function(){const y=F0;B(-2.3,-1.7,y,y+0.9,-12.2,-14.85,mat.white,g0);B(-2.3,-1.7,y+0.9,y+0.94,-12.2,-14.85,mat.stone,g0);B(-2.3,-1.95,y+1.5,y+2.3,-12.2,-14.85,mat.wood,g0);
+  B(0.0,0.9,y+0.74,y+0.78,-12.6,-14.2,mat.wood,g0);B(0.42,0.48,y,y+0.74,-13.3,-13.5,mat.dark,g0);
+  [[-0.35,-12.9],[-0.35,-13.9],[1.25,-12.9],[1.25,-13.9]].forEach(p=>chair(p[0],p[1],y,g0));
+  B(1.75,2.3,y,y+2.0,-14.2,-14.9,mat.metal,g0);})();
 // bedroom 1
-bed(-0.8,0.8,-16.8,-18.75,F0,g0,'z1');B(1.7,2.3,F0,F0+2.4,-15.7,-17.4,mat.wood,g0);B(-2.3,-1.3,F0,F0+0.75,-18.2,-18.75,mat.wood,g0);
+bed(-2.25,-0.25,-15.6,-17.2,F0,g0,'x');B(0.6,1.2,F0,F0+2.4,-15.6,-17.6,mat.wood,g0);
 // back yard
-(function(){const y=F0-0.05;B(-2.3,-1.6,y,y+0.9,-19.15,-19.8,mat.bed,g0);tree(1.8,-19.45,y,g0,0.6);})();
+(function(){const y=F0-0.05;B(-2.3,-1.6,y,y+0.9,-19.15,-19.8,mat.bed,g0);B(-1.4,-0.8,y,y+0.9,-19.2,-19.8,mat.bed,g0);tree(1.8,-19.4,y,g0,0.6);B(0.0,1.2,y,y+0.45,-18.8,-19.3,mat.wood,g0);})();
 
 /* ---------- LẦU 1 (g1) ---------- */
 const g1=groups[1];
@@ -325,7 +325,7 @@ railGlassZ(-9.05,-12,0.1,F2,g2);railGlassX(1.2,2.3,-12.0,F2,g2);
 /* ---------- LABELS ---------- */
 const L=[
  [0,'Garage ô tô','vách kính',-0.4,-2.6],[0,'Phòng khách','5 × 4 m',0,-7.1],[0,'Cầu thang','giếng trời mái',1.2,-10.5],[0,'WC','1,4 × 1,8 m',-1.6,-11.1],
- [0,'Bếp + ăn','5 × 3,5 m',0.3,-13.8],[0,'Phòng ngủ 1','5 × 3,3 m',0,-17.2],[0,'Sân sau','giặt, phơi',0,-19.5],
+ [0,'Bếp + ăn','5 × 3 m',0.3,-13.5],[0,'Phòng ngủ 1','3,5 × 3,3 m',-0.9,-16.9],[0,'Hành lang','ra sân sau',1.75,-16.6],[0,'Sân sau','5 × 1,5 m',-0.4,-19.3],
  [1,'Ban công','5 × 1,2 m',0,-0.6],[1,'Ngủ chính','5 × 5 m',0.4,-3.6],[1,'Thay đồ','tủ âm 2 bên',0,-7.0],
  [1,'Cầu thang','',1.2,-10.5],[1,'WC chung','1,4 × 3,5 m',-1.6,-10.8],[1,'Phòng ngủ 2','2,5 × 6,2 m',-1.0,-14.3],[1,'Làm việc','2 × 6,2 m',1.3,-13.6],
  [2,'Sân thượng','vườn + pergola',0.2,-3.3],[2,'Phòng thờ','5 × 2,5 m',0,-7.6],[2,'Cầu thang','',1.2,-10.5],[2,'Phòng gym','5 × 3,2 m',0,-14.2],[2,'Sân phơi','mái lấy sáng',0,-17.4]
@@ -334,7 +334,7 @@ const lvlY=[F0,F1,F2];
 L.forEach(a=>label(a[1],a[2],a[3],lvlY[a[0]]+2.3,a[4],a[0]));
 
 const roomTables=[
- ['Tầng trệt',[['Garage ô tô (vách kính)','5 × 5 m'],['Phòng khách','5 × 4 m'],['Cầu thang + WC','5 × 3 m'],['Bếp + ăn','5 × 3,5 m'],['Phòng ngủ 1','5 × 3,3 m'],['Sân sau','5 × 1 m']]],
+ ['Tầng trệt',[['Garage ô tô (vách kính)','5 × 5 m'],['Phòng khách','5 × 4 m'],['Cầu thang + WC','5 × 3 m'],['Bếp + ăn','5 × 3 m'],['Phòng ngủ 1','3,5 × 3,3 m'],['Hành lang ra sân sau','1 × 3,3 m'],['Sân sau (dùng chung)','5 × 1,5 m']]],
  ['Lầu 1',[['Ban công','5 × 1,2 m'],['Phòng ngủ chính','5 × 5 m'],['Thay đồ (mở)','5 × 2,2 m'],['WC chung','1,4 × 3,5 m'],['Cầu thang + sảnh','3,6 × 3,6 m'],['Phòng ngủ 2','2,5 × 6,2 m'],['Phòng làm việc','2 × 6,2 m']]],
  ['Sân thượng',[['Sân thượng + vườn','5 × 6,5 m'],['Phòng thờ','5 × 2,5 m'],['Cầu thang','5 × 3 m'],['Phòng gym','5 × 3,2 m'],['Sân phơi','5 × 3 m']]]
 ];
