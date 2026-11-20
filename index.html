@@ -22,13 +22,18 @@
   #rooms td:last-child{color:#5b616b;white-space:nowrap;text-align:right}
   #rooms .t{font-weight:600;margin-bottom:4px}
   #hint{right:12px;bottom:12px;font-size:12px;color:#5b616b}
-  @media (max-width:640px){#top{right:12px;max-width:none}#rooms{display:none}#hint{display:none}}
+  .hdr{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  #tgl{padding:4px 8px;font-size:12px}
+  #top.collapsed .body{display:none}
+  #top.collapsed h1{font-size:13px}
+  @media (max-width:640px){#top{left:8px;top:8px;max-width:calc(100% - 16px);padding:8px 10px}h1{font-size:14px}.sub,.lbl{display:none}.row{margin-top:6px}button{padding:5px 8px;font-size:12px}#rooms{display:none}#hint{display:none}}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div class="panel" id="top">
-  <h1>Nhà phố hiện đại 5×20m</h1>
+  <div class="hdr"><h1>Nhà phố hiện đại 5×20m</h1><button id="tgl" aria-label="Thu gọn / mở bảng">Thu gọn</button></div>
+  <div class="body">
   <div class="sub">1 trệt · 1 lầu · sân thượng — Bến Lức</div>
   <div class="lbl">Xem tầng</div>
   <div class="row" id="modes">
@@ -48,6 +53,7 @@
   <div class="row">
     <button id="tLabels" class="on">Tên phòng</button>
     <button id="tNb">Nhà bên cạnh</button>
+  </div>
   </div>
 </div>
 <div class="panel" id="rooms"></div>
@@ -362,12 +368,18 @@ document.getElementById('tLabels').addEventListener('click',e=>{showLabels=!show
 document.getElementById('tNb').addEventListener('click',e=>{nbGroup.visible=!nbGroup.visible;e.target.classList.toggle('on',nbGroup.visible);});
 
 camera.position.set(...cams.persp.p);controls.target.set(...cams.persp.t);
+const topEl=document.getElementById('top'),tgl=document.getElementById('tgl');
+const isMobile=()=>window.innerWidth<=640;
+function setCollapsed(c){topEl.classList.toggle('collapsed',c);tgl.textContent=c?'Mở bảng':'Thu gọn';}
+tgl.addEventListener('click',()=>setCollapsed(!topEl.classList.contains('collapsed')));
+['modes','cams'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{if(e.target.closest('button')&&isMobile())setCollapsed(true);}));
+if(isMobile()){setCollapsed(true);cams.persp.p=[18,15,12];camera.position.set(...cams.persp.p);}
 // allow hash to pick initial view (for sharing): #tret #lau #santhuong
 const hm={'#tret':'0','#lau':'1','#santhuong':'2'};
 if(hm[location.hash]){mode=hm[location.hash];const y=lvlY[+mode];camera.position.set(5,y+21,-1);controls.target.set(0,y,-10);}
 applyMode();
 
-function resize(){const w=window.innerWidth,h=window.innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+function resize(){const w=window.innerWidth,h=window.innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w/h<1?62:40;camera.updateProjectionMatrix();}
 window.addEventListener('resize',resize);resize();
 function loop(now){
   if(anim){let k=Math.min(1,(now-anim.s)/900);k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;camera.position.lerpVectors(anim.p0,anim.p1,k);controls.target.lerpVectors(anim.t0,anim.t1,k);if(k>=1)anim=null;}
