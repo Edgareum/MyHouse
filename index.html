@@ -142,10 +142,15 @@ function railGlassX(x0,x1,z,y,g){B(x0,x1,y,y+1.05,z-.012,z+.012,mat.glass,g);B(x
 function railGlassZ(z0,z1,x,y,g){B(x-.012,x+.012,y,y+1.05,z0,z1,mat.glass,g);B(x-.03,x+.03,y+1.05,y+1.09,z0,z1,mat.dark,g);}
 function stairU(y0,H,g){
   const r=H/20;
-  for(let i=0;i<10;i++){const top=y0+(i+1)*r;const z=-11.9+i*0.23;B(1.25,2.3,top-0.06,top,z,z+0.23,mat.wood,g);B(1.3,2.25,y0+i*r,top-0.06,z+0.1,z+0.13,mat.dark,g);}
+  for(let i=0;i<10;i++){const top=y0+(i+1)*r;const z=-11.9+i*0.23;B(1.25,2.3,top-0.06,top,z,z+0.25,mat.wood,g);}
   B(0.1,2.3,y0+10*r-0.12,y0+10*r,-9.6,-9.05,mat.wood,g);
-  for(let j=0;j<9;j++){const top=y0+(11+j)*r;const z=-9.6-j*0.255;B(0.1,1.15,top-0.06,top,z,z-0.255,mat.wood,g);B(0.15,1.1,y0+(10+j)*r,top-0.06,z-0.1,z-0.13,mat.dark,g);}
-  B(1.17,1.23,y0,y0+H,-9.6,-11.9,mat.white,g); // centre spine wall
+  for(let j=0;j<9;j++){const top=y0+(11+j)*r;const z=-9.6-j*0.255;B(0.1,1.15,top-0.06,top,z,z-0.275,mat.wood,g);}
+  B(1.17,1.23,y0,y0+H,-9.6,-11.9,mat.white,g); // centre spine wall (treads cantilever from it)
+}
+// full-height vertical wood slat screen around the stair (left side + front face)
+function stairScreen(y0,y1,g,front){
+  for(let z=-9.06;z>-12.0;z-=0.12)B(0.03,0.08,y0,y1,z,z-0.045,mat.wood,g);
+  if(front)for(let x=0.14;x<2.28;x+=0.12)B(x,x+0.045,y0,y1,-8.97,-9.03,mat.wood,g);
 }
 function label(text,sub,x,y,z,lvl){
   const cv=document.createElement('canvas');cv.width=512;cv.height=sub?168:110;const c=cv.getContext('2d');
@@ -176,7 +181,7 @@ for(let x=-28;x<30;x+=4)B(x,x+2,0.02,0.03,8.45,8.55,mat.white,site,false);
 (function(){const geo=new THREE.BoxGeometry(3.2,0.08,1.4);const m=new THREE.Mesh(geo,mat.concrete);m.position.set(-0.85,0.32,0.65);m.rotation.x=0.22;m.receiveShadow=true;site.add(m);})();
 B(1.0,2.4,0.15,0.3,0,0.35,mat.stone,site);
 // back yard ground & fence
-B(-2.5,2.5,0,F0-0.05,-18.55,-20,mat.concrete,site);B(-2.5,-2.3,0,2.4,-18.55,-20,mat.white,site);B(2.3,2.5,0,2.4,-18.55,-20,mat.white,site);
+B(-2.5,2.5,0,F0-0.05,-18.1,-20,mat.concrete,site);B(-2.5,-2.3,0,2.4,-18.1,-20,mat.white,site);B(2.3,2.5,0,F1-0.2,-18.1,-20,mat.white,site);
 B(-2.5,2.5,0,2.0,-19.9,-20,mat.white,site);
 // lot line markers
 B(-2.5,-2.45,0.16,0.2,0,-20,mat.red,site,false);B(2.45,2.5,0.16,0.2,0,-20,mat.red,site,false);
@@ -185,28 +190,23 @@ B(-8,-2.55,0,7.6,-0.5,-19,mat.nb,nbGroup);B(2.55,8,0,7.0,-1.5,-18,mat.nb,nbGroup
 
 /* ---------- GROUND FLOOR (g0) ---------- */
 const g0=groups[0];
-B(-2.5,2.5,0,F0,0,-18.55,mat.concrete,g0);
+B(-2.5,2.5,0,F0,0,-18.1,mat.concrete,g0);
 B(-2.3,2.3,F0-0.01,F0+0.012,0,-5,mat.concrete,g0,false);
-B(-2.3,2.3,F0-0.01,F0+0.012,-5,-18.55,mat.tile,g0,false);
+B(-2.3,2.3,F0-0.01,F0+0.012,-5,-18.1,mat.tile,g0,false);
 const t0=F1-ST;
-wallZ(0,-18.55,F0,t0,-2.5,-2.3,[],mat.white,g0);
-wallZ(0,-18.55,F0,t0,2.3,2.5,[],mat.white,g0);
+wallZ(0,-18.1,F0,t0,-2.5,-2.3,[],mat.white,g0);
+wallZ(0,-18.1,F0,t0,2.3,2.5,[],mat.white,g0);
 // front facade ground: stone cladding
 wallX(-2.5,2.5,F0,t0,0,-0.2,[{a0:-2.3,a1:0.7,y0:F0,y1:F0+2.7},{a0:1.0,a1:2.2,y0:F0,y1:F0+2.9}],mat.stone,g0);
 B(-2.3,0.7,F0,F0+2.7,-0.08,-0.12,mat.garage,g0);
 B(1.0,1.9,F0,F0+2.9,-0.08,-0.12,mat.wood,g0);B(1.9,2.2,F0,F0+2.9,-0.09,-0.11,mat.glass,g0);
 B(1.75,1.78,F0+1.0,F0+1.6,-0.02,-0.06,mat.metal,g0);
 B(0.85,2.4,F0+3.0,F0+3.06,0,0.6,mat.dark,g0); // entry canopy
-// back wall with window (PN1)
-wallX(-2.5,2.5,F0,t0,-18.35,-18.55,[{a0:-2.2,a1:1.0,y0:F0,y1:F0+2.6,glass:true},{a0:1.4,a1:2.2,y0:F0,y1:F0+2.4,glass:true}],mat.white,g0);
+// back wall: PN1 sliding glass + corridor door to yard
+wallX(-2.5,2.5,F0,t0,-17.9,-18.1,[{a0:-2.2,a1:1.0,y0:F0,y1:F0+2.6,glass:true},{a0:1.4,a1:2.2,y0:F0,y1:F0+2.4,glass:true}],mat.white,g0);
 // partitions
 wallX(-2.3,2.3,F0,t0,-4.95,-5.05,[{a0:-2.2,a1:0.45,y0:F0,y1:F0+2.9,glass:true},{a0:0.6,a1:1.6,y0:F0,y1:F0+2.6},{a0:1.75,a1:2.2,y0:F0,y1:F0+2.9,glass:true}],mat.white,g0);B(0.6,1.6,F0,F0+2.6,-4.97,-5.03,mat.glass,g0);
-wallX(-2.3,1.3,F0,t0,-14.95,-15.05,[{a0:0.2,a1:1.05,y0:F0,y1:F0+2.2}],mat.white,g0);wallZ(-15.05,-18.35,F0,t0,1.2,1.3,[],mat.white,g0); // hành lang ra sân sau
-// WC ground
-wallZ(-10.2,-12,F0,t0,-0.95,-0.85,[{a0:-10.4,a1:-11.2,y0:F0,y1:F0+2.2}],mat.white,g0);
-wallX(-2.3,-0.85,F0,t0,-10.15,-10.25,[],mat.white,g0);
-wallX(-2.3,-0.85,F0,t0,-11.95,-12.05,[],mat.white,g0);
-B(-2.2,-1.8,F0,F0+0.42,-11.3,-11.9,mat.bed,g0);B(-1.5,-1.0,F0+0.75,F0+0.9,-10.3,-10.7,mat.bed,g0);
+wallX(-2.3,1.3,F0,t0,-14.55,-14.65,[{a0:0.4,a1:1.2,y0:F0,y1:F0+2.2}],mat.white,g0);wallZ(-14.65,-17.9,F0,t0,1.2,1.3,[],mat.white,g0); // hành lang ra sân sau
 stairU(F0,F1-F0,g0);
 // car
 (function(){const y=F0;B(-1.3,0.5,y+0.3,y+0.95,-0.5,-4.9,mat.car,g0);B(-1.2,0.4,y+0.95,y+1.45,-1.6,-3.8,mat.car,g0);B(-1.15,0.35,y+1.0,y+1.4,-1.55,-3.85,mat.glass,g0);
@@ -218,15 +218,28 @@ stairU(F0,F1-F0,g0);
   B(-0.9,0.1,y,y+0.4,-6.3,-7.6,mat.wood,g0);
   B(2.25,2.3,y+0.4,y+2.9,-5.3,-8.6,mat.wood,g0);B(1.9,2.25,y,y+0.45,-5.6,-8.3,mat.dark,g0);B(2.2,2.25,y+1.0,y+1.9,-6.1,-7.7,mat.dark,g0);
   B(-1.0,0.6,y,y+0.01,-5.7,-8.3,mat.fabric2,g0,false);tree(1.9,-8.7,y,g0,0.7);})();
-// kitchen & dining
-(function(){const y=F0;B(-2.3,-1.7,y,y+0.9,-12.2,-14.85,mat.white,g0);B(-2.3,-1.7,y+0.9,y+0.94,-12.2,-14.85,mat.stone,g0);B(-2.3,-1.95,y+1.5,y+2.3,-12.2,-14.85,mat.wood,g0);
-  B(0.0,0.9,y+0.74,y+0.78,-12.6,-14.2,mat.wood,g0);B(0.42,0.48,y,y+0.74,-13.3,-13.5,mat.dark,g0);
-  [[-0.35,-12.9],[-0.35,-13.9],[1.25,-12.9],[1.25,-13.9]].forEach(p=>chair(p[0],p[1],y,g0));
-  B(1.75,2.3,y,y+2.0,-14.2,-14.9,mat.metal,g0);})();
+// stair = divider between living (front) and kitchen (back): slat screen + pebble garden under stair
+stairScreen(F0,F1-ST,g0,true);
+(function(){const y=F0;B(0.12,2.28,y,y+0.08,-9.1,-11.9,mat.stone,g0,false);
+  for(let i=0;i<40;i++){const pb=new THREE.Mesh(new THREE.SphereGeometry(0.05+Math.random()*0.04,6,5),mat.white);pb.position.set(0.2+Math.random()*2.0,y+0.1,-9.2-Math.random()*1.5);g0.add(pb);}
+  tree(1.7,-9.6,y,g0,0.8);tree(0.6,-10.3,y,g0,0.6);})();
+// passage beside stair: tall pantry cabinets with built-in fridge
+(function(){const y=F0;B(-2.3,-1.7,y,y+2.6,-9.3,-11.9,mat.wood,g0);B(-1.72,-1.7,y+0.1,y+2.5,-10.7,-11.8,mat.metal,g0);})();
+// kitchen behind the stair: counter along left wall + island/dining table
+(function(){const y=F0;B(-2.3,-1.7,y,y+0.9,-12.05,-14.45,mat.white,g0);B(-2.3,-1.7,y+0.9,y+0.94,-12.05,-14.45,mat.stone,g0);B(-2.3,-1.95,y+1.5,y+2.3,-12.05,-14.45,mat.wood,g0);
+  B(-1.0,0.4,y,y+0.9,-12.95,-13.75,mat.white,g0);B(-1.05,0.45,y+0.9,y+0.95,-12.9,-13.8,mat.stone,g0);
+  [[-0.7,-12.6],[0.1,-12.6],[-0.7,-14.1],[0.1,-14.1]].forEach(p=>chair(p[0],p[1],y,g0));
+  const lamp=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.18,0.18,16),mat.dark);lamp.position.set(-0.3,y+2.3,-13.35);g0.add(lamp);})();
 // bedroom 1
-bed(-2.25,-0.25,-15.6,-17.2,F0,g0,'x');B(0.6,1.2,F0,F0+2.4,-15.6,-17.6,mat.wood,g0);
-// back yard
-(function(){const y=F0-0.05;B(-2.3,-1.6,y,y+0.9,-19.15,-19.8,mat.bed,g0);B(-1.4,-0.8,y,y+0.9,-19.2,-19.8,mat.bed,g0);tree(1.8,-19.4,y,g0,0.6);B(0.0,1.2,y,y+0.45,-18.8,-19.3,mat.wood,g0);})();
+bed(-2.25,-0.25,-15.2,-16.8,F0,g0,'x');B(0.6,1.2,F0,F0+2.4,-15.1,-17.1,mat.wood,g0);
+// back yard + WC at rear corner (natural ventilation, direct to septic tank)
+(function(){const y=F0-0.05;
+  wallX(0.6,2.3,y,F1-0.2,-18.6,-18.7,[{a0:1.2,a1:2.0,y0:y,y1:y+2.2}],mat.white,g0);
+  wallZ(-18.7,-19.9,y,F1-0.2,0.6,0.7,[],mat.white,g0);
+  B(0.6,2.5,F1-0.2,F1,-19,-20,mat.white,g0); // WC roof slab
+  B(0.75,2.25,y+1.9,y+2.4,-19.85,-19.92,mat.glass,g0); // high vent window
+  B(1.7,2.15,y,y+0.42,-19.2,-19.8,mat.bed,g0);B(0.8,1.25,y+0.75,y+0.9,-19.3,-19.8,mat.bed,g0);
+  B(-2.3,-1.6,y,y+0.9,-19.15,-19.8,mat.bed,g0);B(-1.4,-0.8,y,y+0.9,-19.2,-19.8,mat.bed,g0);tree(0.15,-19.5,y,g0,0.55);})();
 
 /* ---------- LẦU 1 (g1) ---------- */
 const g1=groups[1];
@@ -244,33 +257,33 @@ for(let x=-2.25;x<-0.55;x+=0.13)B(x,x+0.05,F1+0.02,F2-0.5,0.02,0.12,mat.wood,g1)
 // frame fascia
 B(-2.5,2.5,F1-0.45,F1,0,0.18,mat.white,g1);
 B(-2.5,-2.3,F1,t1,0,0.18,mat.white,g1);B(2.3,2.5,F1,t1,0,0.18,mat.white,g1);
-// back wall: 2 windows (PN2 left, work right)
-wallX(-2.5,2.5,F1,t1,-18.8,-19,[{a0:-2.0,a1:-0.2,y0:F1+0.9,y1:F1+2.7,glass:true},{a0:0.6,a1:2.0,y0:F1+0.9,y1:F1+2.7,glass:true}],mat.white,g1);
-// master suite: wardrobe divider + open dressing (no private WC)
+// back wall: PN2 window (left) + WC window (right, high)
+wallX(-2.5,2.5,F1,t1,-18.8,-19,[{a0:-2.0,a1:0.5,y0:F1+0.9,y1:F1+2.7,glass:true},{a0:1.2,a1:2.1,y0:F1+1.6,y1:F1+2.4,glass:true}],mat.white,g1);
+// master suite: wardrobe divider + open dressing
 B(0.3,2.3,F1,F1+2.4,-6.15,-6.75,mat.wood,g1);
 B(1.75,2.3,F1,F1+2.6,-6.8,-8.9,mat.wood,g1);B(-2.3,-1.75,F1,F1+2.6,-6.8,-8.9,mat.wood,g1);
 B(-0.6,0.6,F1,F1+0.75,-7.4,-8.0,mat.wood,g1);B(-0.55,0.55,F1+0.75,F1+0.8,-7.45,-7.95,mat.stone,g1);
 // master / hall divide
 wallX(-2.3,0.1,F1,t1,-8.95,-9.05,[{a0:-0.85,a1:0.05,y0:F1,y1:F1+2.3}],mat.white,g1);
-// WC chung
-wallZ(-9.05,-12.55,F1,t1,-0.95,-0.85,[{a0:-10.3,a1:-11.1,y0:F1,y1:F1+2.2}],mat.white,g1); // WC chung: vách trước = vách master, vách sau = vách PN2
-B(-2.3,-1.8,F1+0.75,F1+0.9,-9.2,-9.9,mat.bed,g1);B(-2.3,-2.27,F1+1.1,F1+1.9,-9.25,-9.85,mat.glass,g1);B(-2.2,-1.8,F1,F1+0.42,-10.55,-11.1,mat.bed,g1);B(-2.25,-0.95,F1,F1+2.1,-11.45,-11.49,mat.glass,g1);
-// back zone: PN2 (left) and work room (right) side by side, doors from stair hall
-wallX(-2.3,2.3,F1,t1,-12.55,-12.65,[{a0:-0.8,a1:-0.1,y0:F1,y1:F1+2.3},{a0:0.4,a1:1.2,y0:F1,y1:F1+2.3},{a0:1.35,a1:2.2,y0:F1+2.45,y1:F1+3.0,glass:true}],mat.white,g1);
-wallZ(-12.65,-18.8,F1,t1,0.2,0.3,[],mat.white,g1);
-railGlassZ(-9.05,-12,0.1,F1,g1);railGlassX(1.2,2.3,-12.0,F1,g1);
+// hall beside stair: built-in storage + reading bench (old WC space)
+B(-2.3,-1.85,F1,F1+2.4,-9.2,-11.0,mat.wood,g1);B(-2.3,-1.6,F1,F1+0.45,-11.1,-12.4,mat.fabric,g1);
+// back zone: PN2 + work combined (left), corridor + WC at rear corner (right)
+wallX(-2.3,0.95,F1,t1,-12.55,-12.65,[{a0:-0.7,a1:0.15,y0:F1,y1:F1+2.3}],mat.white,g1);
+wallZ(-12.65,-18.8,F1,t1,0.85,0.95,[],mat.white,g1);
+wallX(0.95,2.3,F1,t1,-16.2,-16.3,[{a0:1.05,a1:1.8,y0:F1,y1:F1+2.2}],mat.white,g1);
+B(1.9,2.3,F1,F1+2.4,-12.8,-16.1,mat.wood,g1); // tủ âm hành lang
+stairScreen(F1,F2-ST,g1,true);railGlassX(1.2,2.3,-12.0,F1,g1);
+// WC fixtures (rear)
+B(1.0,1.6,F1+0.75,F1+0.9,-16.45,-16.95,mat.bed,g1);B(1.75,2.2,F1,F1+0.42,-16.5,-17.1,mat.bed,g1);B(0.95,2.3,F1,F1+2.1,-17.6,-17.64,mat.glass,g1);
 // master furniture
 bed(-2.25,-0.25,-2.6,-4.6,F1,g1,'x');
 B(1.6,2.3,F1,F1+0.5,-2.2,-4.8,mat.wood,g1);B(2.25,2.3,F1+1.0,F1+1.8,-2.8,-4.2,mat.dark,g1);
 B(-2.25,-1.6,F1,F1+0.6,-1.4,-1.9,mat.fabric,g1);
-// PN2 furniture
-bed(-2.05,-0.45,-17.7,-15.7,F1,g1,'z1');
-B(-2.3,-1.15,F1,F1+2.4,-12.7,-13.3,mat.wood,g1);
-desk(-2.25,-0.9,-18.3,-18.75,F1,g1);chair(-1.55,-17.95,F1,g1);
-// work room furniture
-desk(1.6,2.3,-14.4,-17.6,F1,g1);chair(1.25,-15.2,F1,g1);chair(1.25,-16.8,F1,g1);
-B(2.24,2.28,F1+0.85,F1+1.25,-14.9,-15.5,mat.dark,g1);B(2.24,2.28,F1+0.85,F1+1.25,-16.5,-17.1,mat.dark,g1);
-B(0.3,0.6,F1,F1+2.2,-13.0,-15.6,mat.wood,g1);B(0.45,1.2,F1,F1+0.45,-17.9,-18.7,mat.fabric,g1);
+// PN2 + work: desk zone front, low shelf divider, sleeping zone at window
+desk(-2.3,-1.6,-12.9,-15.7,F1,g1);chair(-1.25,-13.6,F1,g1);chair(-1.25,-14.9,F1,g1);
+B(-2.28,-2.24,F1+0.85,F1+1.25,-13.3,-13.9,mat.dark,g1);B(-2.28,-2.24,F1+0.85,F1+1.25,-14.6,-15.2,mat.dark,g1);
+B(-0.9,0.85,F1,F1+1.2,-15.95,-16.25,mat.wood,g1);
+bed(-2.25,-0.25,-16.6,-18.2,F1,g1,'x');B(0.25,0.85,F1,F1+2.4,-16.4,-18.7,mat.wood,g1);
 stairU(F1,F2-F1,g1);
 
 /* ---------- SÂN THƯỢNG (g2) ---------- */
@@ -298,7 +311,7 @@ wallX(-2.5,2.5,F2,tt,-6.5,-6.7,[{a0:-2.0,a1:2.0,y0:F2,y1:F2+2.6,glass:true}],mat
 wallX(-2.3,2.3,F2,tt,-8.95,-9.05,[{a0:-1.9,a1:-1.0,y0:F2,y1:F2+2.3}],mat.white,g2);
 wallX(-2.3,2.3,F2,tt,-12.55,-12.65,[{a0:-1.4,a1:-0.5,y0:F2,y1:F2+2.3}],mat.white,g2);
 wallX(-2.5,2.5,F2,tt,-15.8,-16,[{a0:-2.0,a1:0.0,y0:F2,y1:F2+2.5,glass:true},{a0:0.5,a1:2.0,y0:F2+1.0,y1:F2+2.5,glass:true}],mat.white,g2);
-railGlassZ(-9.05,-12,0.1,F2,g2);railGlassX(1.2,2.3,-12.0,F2,g2);
+stairScreen(F2,R-ST,g2,false);railGlassX(1.2,2.3,-12.0,F2,g2);
 // altar room
 (function(){const y=F2;B(-1.2,1.2,y,y+0.9,-8.45,-8.9,mat.wood,g2);B(-0.9,0.9,y+0.9,y+1.5,-8.6,-8.9,mat.red,g2);B(-0.7,0.7,y+1.5,y+1.9,-8.7,-8.9,mat.wood,g2);
   B(-1.2,1.2,y+1.95,y+2.0,-8.55,-8.9,mat.gold,g2);B(-0.12,0.12,y+0.9,y+1.12,-8.3,-8.45,mat.gold,g2);
@@ -324,23 +337,23 @@ railGlassZ(-9.05,-12,0.1,F2,g2);railGlassX(1.2,2.3,-12.0,F2,g2);
 
 /* ---------- LABELS ---------- */
 const L=[
- [0,'Garage ô tô','vách kính',-0.4,-2.6],[0,'Phòng khách','5 × 4 m',0,-7.1],[0,'Cầu thang','giếng trời mái',1.2,-10.5],[0,'WC','1,4 × 1,8 m',-1.6,-11.1],
- [0,'Bếp + ăn','5 × 3 m',0.3,-13.5],[0,'Phòng ngủ 1','3,5 × 3,3 m',-0.9,-16.9],[0,'Hành lang','ra sân sau',1.75,-16.6],[0,'Sân sau','5 × 1,5 m',-0.4,-19.3],
+ [0,'Garage ô tô','vách kính',-0.4,-2.6],[0,'Phòng khách','5 × 4 m',0,-7.1],[0,'Tủ kho + tủ lạnh','âm tường',-1.4,-10.6],[0,'Cầu thang','lam gỗ + tiểu cảnh',1.2,-10.5],
+ [0,'Bếp + đảo ăn','5 × 2,5 m',0.6,-13.3],[0,'Phòng ngủ 1','3,5 × 3,3 m',-0.9,-16.6],[0,'Hành lang','ra sân sau',1.75,-16.2],[0,'Sân sau','giặt, phơi',-1.0,-19.0],[0,'WC','sau nhà',1.45,-19.3],
  [1,'Ban công','5 × 1,2 m',0,-0.6],[1,'Ngủ chính','5 × 5 m',0.4,-3.6],[1,'Thay đồ','tủ âm 2 bên',0,-7.0],
- [1,'Cầu thang','',1.2,-10.5],[1,'WC chung','1,4 × 3,5 m',-1.6,-10.8],[1,'Phòng ngủ 2','2,5 × 6,2 m',-1.0,-14.3],[1,'Làm việc','2 × 6,2 m',1.3,-13.6],
+ [1,'Cầu thang','',1.2,-10.5],[1,'Sảnh','tủ âm + ghế đọc',-1.6,-10.3],[1,'PN2 + làm việc','3,2 × 6,2 m',-0.8,-14.3],[1,'Hành lang','tủ âm',1.4,-14.3],[1,'WC chung','1,4 × 2,5 m',1.6,-17.6],
  [2,'Sân thượng','vườn + pergola',0.2,-3.3],[2,'Phòng thờ','5 × 2,5 m',0,-7.6],[2,'Cầu thang','',1.2,-10.5],[2,'Phòng gym','5 × 3,2 m',0,-14.2],[2,'Sân phơi','mái lấy sáng',0,-17.4]
 ];
 const lvlY=[F0,F1,F2];
 L.forEach(a=>label(a[1],a[2],a[3],lvlY[a[0]]+2.3,a[4],a[0]));
 
 const roomTables=[
- ['Tầng trệt',[['Garage ô tô (vách kính)','5 × 5 m'],['Phòng khách','5 × 4 m'],['Cầu thang + WC','5 × 3 m'],['Bếp + ăn','5 × 3 m'],['Phòng ngủ 1','3,5 × 3,3 m'],['Hành lang ra sân sau','1 × 3,3 m'],['Sân sau (dùng chung)','5 × 1,5 m']]],
- ['Lầu 1',[['Ban công','5 × 1,2 m'],['Phòng ngủ chính','5 × 5 m'],['Thay đồ (mở)','5 × 2,2 m'],['WC chung','1,4 × 3,5 m'],['Cầu thang + sảnh','3,6 × 3,6 m'],['Phòng ngủ 2','2,5 × 6,2 m'],['Phòng làm việc','2 × 6,2 m']]],
+ ['Tầng trệt',[['Garage ô tô (vách kính)','5 × 5 m'],['Phòng khách','5 × 4 m'],['Cầu thang + lam ngăn','2,2 × 3 m'],['Tủ kho + tủ lạnh âm','0,6 × 2,6 m'],['Bếp + đảo ăn','4,6 × 2,5 m'],['Phòng ngủ 1','3,5 × 3,3 m'],['Hành lang ra sân sau','1 × 3,3 m'],['Sân sau','2,9 × 1,9 m'],['WC sau nhà','1,6 × 1,2 m']]],
+ ['Lầu 1',[['Ban công','5 × 1,2 m'],['Phòng ngủ chính','5 × 5 m'],['Thay đồ (mở)','5 × 2,2 m'],['Cầu thang + sảnh đọc sách','5 × 3,6 m'],['Phòng ngủ 2 + làm việc','3,2 × 6,2 m'],['Hành lang + tủ âm','1,4 × 3,5 m'],['WC chung (cửa sổ sau)','1,4 × 2,5 m']]],
  ['Sân thượng',[['Sân thượng + vườn','5 × 6,5 m'],['Phòng thờ','5 × 2,5 m'],['Cầu thang','5 × 3 m'],['Phòng gym','5 × 3,2 m'],['Sân phơi','5 × 3 m']]]
 ];
 const roomsEl=document.getElementById('rooms');
 function showRooms(m){
-  if(m==='all'){roomsEl.innerHTML='<div class="t">Thông số</div><table><tr><td>Lô đất</td><td>5 × 20 m</td></tr><tr><td>Xây dựng</td><td>5 × 19 m</td></tr><tr><td>Cao độ nền</td><td>+0,45 m</td></tr><tr><td>Tầng trệt / lầu / tum</td><td>3,6 / 3,4 / 3,2 m</td></tr><tr><td>Tổng chiều cao</td><td>≈ 10,9 m</td></tr><tr><td>Phòng ngủ / WC</td><td>3 / 2</td></tr></table>';return;}
+  if(m==='all'){roomsEl.innerHTML='<div class="t">Thông số</div><table><tr><td>Lô đất</td><td>5 × 20 m</td></tr><tr><td>Xây dựng</td><td>trệt 5 × 18,1 · lầu 5 × 19 m</td></tr><tr><td>Cao độ nền</td><td>+0,45 m</td></tr><tr><td>Tầng trệt / lầu / tum</td><td>3,6 / 3,4 / 3,2 m</td></tr><tr><td>Tổng chiều cao</td><td>≈ 10,9 m</td></tr><tr><td>Phòng ngủ / WC</td><td>3 / 2</td></tr></table>';return;}
   const r=roomTables[+m];roomsEl.innerHTML='<div class="t">'+r[0]+'</div><table>'+r[1].map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table>';
 }
 
